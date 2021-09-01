@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<dds version="6.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/6.0.1/rti_dds_profiles.xsd">
+
+    <!-- Qos Library -->
+    <qos_library name="QosLibrary">
+        <qos_profile name="DefaultProfile"
+                     base_name="BuiltinQosLib::Generic.StrictReliable"
+                     is_default_qos="true">
+        </qos_profile>
+    </qos_library>
+
+    <types>
+        <include file="TemperatureType.xml"/>
+    </types>
+
+    <domain_library name="Temperature_Domain_Library">
+        <domain domain_id="0" name="Temperature_Domain">
+            <register_type name="types::TemperatureType" type_ref="types::TemperatureType"/>
+            <topic name="TemperatureType" register_type_ref="types::TemperatureType"/>
+        </domain>
+    </domain_library>
+
+    <domain_participant_library name="Temperature_Participant_Library">
+        <domain_participant name="Temperature_Participant"
+                            domain_ref="Temperature_Domain_Library::Temperature_Domain">
+            <participant_qos name="Temperature_Participant_Qos" base_name="QosLibrary::DefaultProfile"/>
+            <publisher name="TemperaturePublisher">
+                <data_writer name="TemperatureType_DW" topic_ref="TemperatureType"/>
+            </publisher>
+
+            <subscriber name="TemperatureSubscriber">
+                <data_reader name="TemperatureType_DR" topic_ref="TemperatureType"/>
+            </subscriber>
+        </domain_participant>
+    </domain_participant_library>
+
+</dds>
